@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_go_router/screens/10_transition_screen_1.dart';
+import 'package:flutter_go_router/screens/10_transition_screen_2.dart';
+import 'package:flutter_go_router/screens/11_error_screen.dart';
 import 'package:flutter_go_router/screens/1_basic_screen.dart';
 import 'package:flutter_go_router/screens/2_named_screen.dart';
 import 'package:flutter_go_router/screens/3_push_screen.dart';
@@ -149,7 +153,31 @@ final router = GoRouter(
             ),
           ],
         ),
+        GoRoute(
+          path: 'transition',
+          builder: (_, state) => TransitionScreenOne(),
+          routes: [
+            GoRoute(
+              path: 'detail',
+              pageBuilder: (_, state) => CustomTransitionPage(
+                transitionDuration: Duration(seconds: 3),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+                child: TransitionScreenTwo(),
+              ),
+            ),
+          ],
+        ),
       ],
     ),
   ],
+  errorBuilder: (context, state) => ErrorScreen(
+    error: state.error.toString(),
+  ),
+  debugLogDiagnostics: true,
 );
