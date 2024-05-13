@@ -9,6 +9,16 @@ class NestedScreen extends StatelessWidget {
     super.key,
   });
 
+  int getIndex(BuildContext context) {
+    if (GoRouterState.of(context).location == '/nested/a') {
+      return 0;
+    } else if (GoRouterState.of(context).location == '/nested/a') {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,6 +27,16 @@ class NestedScreen extends StatelessWidget {
       ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: getIndex(context),
+        onTap: (index) {
+          if (index == 0) {
+            context.go('/nested/a');
+          } else if (index == 1) {
+            context.go('/nested/b');
+          } else {
+            context.go('/nested/c');
+          }
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(

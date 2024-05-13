@@ -7,8 +7,14 @@ import 'package:flutter_go_router/screens/6_path_param_screen.dart';
 import 'package:flutter_go_router/screens/7_query_parameter_screen.dart';
 import 'package:flutter_go_router/screens/8_nested_child_screen.dart';
 import 'package:flutter_go_router/screens/8_nested_screen.dart';
+import 'package:flutter_go_router/screens/9_login_screen.dart';
+import 'package:flutter_go_router/screens/9_private_screen.dart';
 import 'package:flutter_go_router/screens/root_screen.dart';
 import 'package:go_router/go_router.dart';
+
+// 로그인이 됐는지 안 됐는지
+// true - login OK / false - login NO
+bool authState = false;
 
 // https://blog.codefactory.ai/ -> / -> path
 // https://blog.codefactory.ai/flutter -> /flutter
@@ -18,6 +24,15 @@ import 'package:go_router/go_router.dart';
 // /named
 
 final router = GoRouter(
+  redirect: (context, state) {
+    // return String (path) -> 해당 라우트로 이동한다. (path)
+    // return null -> 원래 이동하려던 라우트로 이동한다.
+    if (state.location == '/login/private' && !authState) {
+      return '/login';
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -105,6 +120,32 @@ final router = GoRouter(
               builder: (_, state) => NestedChildScreen(
                 routeName: '/nested/c',
               ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login',
+          builder: (_, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (_, state) => PrivateScreen(),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login2',
+          builder: (_, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (_, state) => PrivateScreen(),
+              redirect: (context, state) {
+                if (!authState) {
+                  return '/login2';
+                }
+                return null;
+              },
             ),
           ],
         ),
